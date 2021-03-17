@@ -1,31 +1,73 @@
 //#region var declaration
-const BAD_USERNAME_PASSWORD_COMBO = "This username and password combo doesn't exist.";
+const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
+const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 const BREACH_ERRORMESSAGE = "breach";
 const BADCOMBO_ERRORMESSAGE = "badCombo";
-
 //#endregion
-
-//#region Login + signup
-// onClick "login"
-function login() {
+//#region main button to trigger = "sign up"
+// onClick "register"
+function signup() {
     var result = false;
-    if (isGoodUserPasswordCombo()) {
+    if (passwordIsOK()) {
         result = true;
-    } else {
-        badCombo();
-        logError("badCombo");
+        //createUser();
     }
     return result;
 }
 //#endregion
 
 //#region password checker
+// control validity of password
+function passwordIsOK() {
+    var result = false;
+    if (lengthIsOK()) {
+        if (!psswdIsBreached()) {
+            result = true;
+        }
+    }
+    return result;
+}
+
+// control if password length is least 8
+function lengthIsOK() {
+    var result = false;
+    changeClassLBad();
+    if (document.getElementById("password").value.length >= 8) {
+        changeClassLGood();
+        result = true;
+    }
+    return result;
+}
+
+// control if password is breached
+function psswdIsBreached() {
+    var result = false;
+    var hash = SHA1(document.getElementById("password").value);
+    var prefix = hash.substring(0, 5);
+    var suffix = hash.substring(5, hash.length)
+
+    axios.get(`${HIBP_API_URL}/${prefix}`).then(response => {
+        var responseOnePerLine = response.data.split("\n");
+
+        for (var i = 0; i < responseOnePerLine.length; i++) {
+            var data = responseOnePerLine[i].split(":");
+
+
+            if (data[0].toLowerCase() == suffix) {
+                logError(BREACH_ERRORMESSAGE);
+                document.getElementById("psswdBreach").innerHTML = BREACHED_PASSWORD_TEXT;
+                return result = true;
+            }
+        }
+        return result;
+    }).catch(error => console.error('On get API Answer error', error));
+}
 
 /**
  * Secure Hash Algorithm (SHA1)
  * http://www.webtoolkit.info/
  **/
-function SHA1(msg) {
+ function SHA1(msg) {
     function rotate_left(n, s) {
         var t4 = (n << s) | (n >>> (32 - s));
         return t4;
@@ -160,84 +202,54 @@ function SHA1(msg) {
 }
 //#endregion
 
-//#region class change for colours
-function badCombo() {
-    document.getElementById('wrongCombo').innerHTML = BAD_USERNAME_PASSWORD_COMBO;
+//#region class change colours
+function changeClassLGood() {
+    document.getElementById("psswdLength").classList.remove("badPsswd");
+    document.getElementById("psswdLength").classList.add("goodPsswd");
+}
+
+function changeClassLBad() {
+    document.getElementById("psswdLength").classList.remove("goodPsswd");
+    document.getElementById("psswdLength").classList.add("badPsswd");
 }
 //#endregion
 
-//#region Erase button
-function EraseBase() {
-    document.getElementById('username').value = "";
-    document.getElementById("password").value = "";
-}
+//#region CreatingUser
+async function createUser() {
+    try{
+        await client.connect();
+        console.log("Connected correctly to server");
+        const db = client.db(dbName);
 
-function Erase() {
-    EraseBase();
-    document.getElementById("name").value = "";
-    document.getElementById('firstname').value = "";
-    document.getElementById('addressline').value = "";
-    document.getElementById("Email").value = "";
-    document.getElementById("Saved").innerHTML = "";
-    if (document.getElementById("name") != null) {
-        document.getElementById("name").focus();
-    } else {
-        document.getElementById('username').focus();
+        // Use the collection "Users"
+        const col = db.collection("Users");
+
+        var jsonData = {
+            "name": document.getElementById("name").value,
+            "firstName" : document.getElementById("firstname").value,
+            "adressLine" : document.getElementById("addressline").value,
+            "userName" : document.getElementById("username").value,
+            "email" : document.getElementById("email").value,
+            "password" : document.getElementById("password").value
+        };
+        console.log(jsonData);
+        // Insert a single document, wait for promise so we can read it back
+        const p = await col.insertOne(personDocument);
+
+        // Find one document
+        const myDoc = await col.findOne();
+
+        // Print to the console
+        console.log(myDoc);
+    }catch(err){
+        console.error(err.stack);
     }
-}
-//#endregion
 
-//#region check login
-function isGoodUserPasswordCombo() {
-    var result = false;
-
-    if (isExistingUsername()) {
-        if (isMatchingPassword()) {
-            result = true;
-        }
+    finally{
+        await client.close();
     }
-    return result;
+
 }
-
-// check database to see if user exists
-function isExistingUsername() {
-    var result = false;
-
-    /* axios.get(`${DB_URL}`).then(response => {
-        //console.log(response);
-        var responseOnePerLine = response.data.split("\n");
-                //console.log(responseOnePerLine);
-        for (var i = 0; i < responseOnePerLine.length; i++) {
-            var data = responseOnePerLine[i].split(":");
-                    //console.log(data);
-            if (data[0] == username) {
-                result = true;
-            }
-        }
-        return result;
-    }).catch(error => console.error('On get API Answer error', error)); */
-    return result;
-}
-
-// Check if given password matches username
-function isMatchingPassword() {
-    var result = false;
-    /* axios.get(`${DB_URL}`).then(response => {
-        //console.log(response);
-        var responseOnePerLine = response.data.split("\n");
-                //console.log(responseOnePerLine);
-        for (var i = 0; i < responseOnePerLine.length; i++) {
-            var data = responseOnePerLine[i].split(":");
-                    //console.log(data);
-            if (data[0] == password) {
-                result = true;
-            }
-        }
-        return result;
-    }).catch(error => console.error('On get API Answer error', error)); */
-    return result;
-}
-
 //#endregion
 
 //#region errors
@@ -255,5 +267,5 @@ function logError(error) {
 //#endregion
 
 //#region exports
-module.exports = {login};
+module.exports = {signup, lengthIsOK}
 //#endregion

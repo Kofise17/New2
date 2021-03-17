@@ -39,7 +39,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
 
   /* SHOW ADD PRODUCT FORM */
   router.get('/add', (req, res) => {
-    res.render('search_not_found.ejs', {})
+    res.render('add.ejs', {})
   })
   router.post('/add', (req, res) => {
     res.render('search_not_found.ejs', {})

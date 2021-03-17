@@ -5,15 +5,12 @@ const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/test?re
 var db;
 
 MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
+  db = database.db('SWS_DB')
   if (err) return console.log(err)
-  db = database.db('products')
 
   /* GET ALL PRODUCTS */
   router.get('/', (req, res) => {
-    db.collection('items').find().toArray((err, result) => {
-      if (err) return
-      res.render('list.ejs', { products: result })
-    })
+    res.render('login.ejs')
   })
 
   /* SHOW ADD PRODUCT FORM */

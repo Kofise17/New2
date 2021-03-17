@@ -22,47 +22,18 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   router.post('/add', (req, res) => {
     db.collection('Users').insertOne(req.body, (err, result) => {
       if (err) return
-      res.render('welcome.ejs')
+      res.redirect('/welcome')
     })
   })
 
+  /* SHOW WELCOME PAGE */
+  router.get('/welcome', (req, res) => {
+    res.render('welcome.ejs', {})
+  })
 
   /* SHOW ADD PRODUCT FORM */
   router.get('/add', (req, res) => {
     res.render('add.ejs', {})
-  })
-
-  /* ADD PRODUCT TO DB */
-  router.post('/add', (req, res) => {
-    db.collection('items').insertOne(req.body, (err, result) => {
-      if (err) return
-      res.redirect('/')
-    })
-  })
-
-  /* SEARCH FORM */
-  router.get('/search', (req, res) => {
-    res.render('search.ejs', {})
-  })
-
-  /* FIND A PRODUCT */
-  router.post('/search', (req, res) => {
-  var query = { name: req.body.name }
-  db.collection('items').findOne(query, (err, result) => {
-    if (err) return
-    if (result == '')
-        res.render('search_not_found.ejs', {})
-    else
-        res.render('search_result.ejs', { product: result })
-  });
-  })
-
-  /* DELETE A PRODUCT */
-  router.post('/delete', (req, res) => {
-    db.collection('items').findOneAndDelete({ id: req.body.id }, (err, result) => {
-      if (err) return res.send(500, err)
-      res.redirect('/')
-    })
   })
 })
 

@@ -8,10 +8,24 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   db = database.db('SWS_DB')
   if (err) return console.log(err)
 
-  /* GET ALL PRODUCTS */
+  /* GET LOGINPAGE */
   router.get('/', (req, res) => {
     res.render('login.ejs')
   })
+
+  /* SHOW SIGNUP PAGE */
+  router.get('/signup', (req, res) =>{
+    res.render('signup.ejs', {})
+  })
+
+  /* ADD USER TO DB*/
+  router.post('/add', (req, res) => {
+    db.collection('Users').insertOne(req.body, (err, result) => {
+      if (err) return
+      res.redirect('/welcome')
+    })
+  })
+
 
   /* SHOW ADD PRODUCT FORM */
   router.get('/add', (req, res) => {

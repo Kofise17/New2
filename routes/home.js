@@ -22,7 +22,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   router.post('/add', (req, res) => {
     db.collection('Users').insertOne(req.body, (err, result) => {
       if (err) return
-      res.redirect('/welcome')
+      res.redirect('/home/welcome')
     })
   })
 
@@ -33,7 +33,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
 
   /* SHOW ADD PRODUCT FORM */
   router.get('/add', (req, res) => {
-    res.render('add.ejs', {})
+    res.render('signup.ejs', {})
   })
 })
 

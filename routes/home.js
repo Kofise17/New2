@@ -22,7 +22,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   router.post('/add', (req, res) => {
     db.collection('Users').insertOne(req.body, (err, result) => {
       if (err) return
-      res.redirect('/welcome')
+      res.render('welcome.ejs')
     })
   })
 

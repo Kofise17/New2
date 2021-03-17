@@ -21,14 +21,15 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   })
 
   /* ADD USER TO DB*/
-  router.post('/add', (req, res) => {
+  router.post('/signup', (req, res) => {
     if(signups.signup()){
       createUser();
+      res.redirect('/home/welcome')
     }
-    db.collection('Users').insertOne(req.body, (err, result) => {
+    /* db.collection('Users').insertOne(req.body, (err, result) => {
       if (err) return
       res.redirect('/home/welcome')
-    })
+    }) */
   })
 
   /* SHOW WELCOME PAGE */
@@ -38,7 +39,10 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
 
   /* SHOW ADD PRODUCT FORM */
   router.get('/add', (req, res) => {
-    res.render('signup.ejs', {})
+    res.render('search_not_found.ejs', {})
+  })
+  router.post('/add', (req, res) => {
+    res.render('search_not_found.ejs', {})
   })
 })
 
@@ -60,7 +64,7 @@ async function createUser() {
       };
       console.log(jsonData);
       // Insert a single document, wait for promise so we can read it back
-      const p = await col.insertOne(personDocument);
+      const p = await col.insertOne(jsonData);
 
       // Find one document
       const myDoc = await col.findOne();
@@ -70,9 +74,4 @@ async function createUser() {
   }catch(err){
       console.error(err.stack);
   }
-
-  finally{
-      await client.close();
-  }
-
 }

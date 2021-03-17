@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient
+const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/test?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true";
 var db;
 
-MongoClient.connect('mongodb://localhost:27017', {useUnifiedTopology: true}, (err, database) => {
+MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   if (err) return console.log(err)
   db = database.db('products')
 

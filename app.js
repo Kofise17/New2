@@ -11,7 +11,7 @@ var homeRouter = require('./routes/home');
 //#endregion
 
 // set port
-var port = process.env.PORT || '3000';
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 //#region server

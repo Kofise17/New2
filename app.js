@@ -24,10 +24,6 @@ app.use('/', indexRouter);
 app.use('/home', homeRouter);
 //#endregion
 
-// set port
-
-
-
 //#region server
 /* var server = http.createServer(app);
 server.listen(port);

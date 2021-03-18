@@ -62,3 +62,4 @@ This project was developed by:<br />
 - [ ] Show errors on page when password is too short
 - [ ] Show errors on page when password is breached
 - [ ] Show errors on page when password/username combo is wrong
+- [ ] Make Erase button work

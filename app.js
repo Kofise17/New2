@@ -8,11 +8,11 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 //#endregion
+
 var app = express();
+
 // set port
-console.log("made it to normalize");
 var port = normalizePort(process.env.PORT || '3000');
-console.log("made it past normalize");
 app.set('port', port);
 
 //#region server
@@ -92,7 +92,7 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  //debug('Listening on ' + bind);
 }
 
 // Normalize a port into a number, string, or false.

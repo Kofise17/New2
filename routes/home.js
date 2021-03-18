@@ -36,7 +36,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
         "email" : [req.body.email].toString(),
         "password" : signups.SHA1([req.body.password])
       };
-      console.log(jsonData);
+      //console.log(jsonData);
       createUser(jsonData).catch(console.dir);
       res.redirect('/home/welcome');
     }

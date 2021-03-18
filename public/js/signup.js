@@ -1,6 +1,5 @@
 //#region var declaration
-var crypto = require('crypto')
-var shasum = crypto.createHash('sha1');
+const axios = require('axios');
 const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 const BREACH_ERRORMESSAGE = "breach";
@@ -9,7 +8,9 @@ const BADCOMBO_ERRORMESSAGE = "badCombo";
 //#region main button to trigger = "sign up"
 // onClick "register"
 function signup(password) {
+    password = password.toString();
     var result = false;
+    console.log("passwordIsOK = " + passwordIsOK(password));
     if (passwordIsOK(password)) {
         result = true;
         //createUser();
@@ -22,17 +23,19 @@ function signup(password) {
 // control validity of password
 function passwordIsOK(password) {
     var result = false;
+    console.log("lengthIsOK = " + lengthIsOK(password));
     if (lengthIsOK(password)) {
-        //if (!psswdIsBreached(password)) {
+        console.log("!psswdIsBreached = " + !psswdIsBreached(password));
+        if (!psswdIsBreached(password)) {
             result = true;
-        //}
+        }
     }
+    //console.log(result);
     return result;
 }
 
 // control if password length is least 8
 function lengthIsOK(password) {
-    password = password.toString();
     var result = false;
     //changeClassLBad();
     if (password.length >= 8) {
@@ -50,7 +53,7 @@ function psswdIsBreached(password) {
     var suffix = hash.substring(5, hash.length)
 
     axios.get(`${HIBP_API_URL}/${prefix}`).then(response => {
-        console.log(response);
+        //console.log(response);
         var responseOnePerLine = response.data.split("\n");
 
         for (var i = 0; i < responseOnePerLine.length; i++) {

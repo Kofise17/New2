@@ -8,64 +8,72 @@ const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
 
 /* GET LOGINPAGE */
-router.get('/', (req, res) => {
-  res.render('login.ejs')
+router.get('/login', (req, res) => {
+    res.render('login.ejs')
 })
+
+/* GET HOME PAGE. */
+router.get('/', function(req, res, next) {
+    res.redirect('/home');
+});
+
 
 /* SHOW SIGNUP PAGE */
-router.get('/signup', (req, res) =>{
-  res.render('signup.ejs', {})
-})
-
-/* ADD USER TO DB*/
-router.post('/signup', (req, res) => {
-  if(signups.signup([req.body.password])){
-    console.log("signup = true (succeeded)");
-    //console.log(req);
-    var jsonData = {
-      "name": [req.body.name].toString(),
-      "firstname" : [req.body.firstname].toString(),
-      "adressline" : [req.body.adressline].toString(),
-      "username" : [req.body.username].toString(),
-      "email" : [req.body.email].toString(),
-      "password" : signups.SHA1([req.body.password])
-    };
-    //console.log(jsonData);
-    createUser(jsonData).catch(console.dir);
-    res.redirect('/home/welcome');
-  }
-  else{
-    console.log("signup = false (something went wrong)");
-    res.render('search_not_found.ejs', {})
-  }
+router.get('/signup', (req, res) => {
+    res.render('signup.ejs', {})
 })
 
 /* SHOW WELCOME PAGE */
 router.get('/welcome', (req, res) => {
-  res.render('welcome.ejs', {})
+    res.render('welcome.ejs', {})
+})
+
+/* ADD USER TO DB*/
+router.post('/signup', (req, res) => {
+    if (signups.signup([req.body.password])) {
+        console.log("signup = true (succeeded)");
+        //console.log(req);
+        var jsonData = {
+            "name": [req.body.name].toString(),
+            "firstname": [req.body.firstname].toString(),
+            "adressline": [req.body.adressline].toString(),
+            "username": [req.body.username].toString(),
+            "email": [req.body.email].toString(),
+            "password": signups.SHA1([req.body.password])
+        };
+        //console.log(jsonData);
+        createUser(jsonData).catch(console.dir);
+        res.redirect('/home/welcome');
+    } else {
+        console.log("signup = false (something went wrong)");
+        res.render('search_not_found.ejs', {})
+    }
+})
+
+/* SHOW WELCOME PAGE */
+router.get('/welcome', (req, res) => {
+    res.render('welcome.ejs', {})
 })
 
 module.exports = router;
 
 
 async function createUser(jsonData) {
-  //console.log(res);
-  try {
-    await client.connect();
-    console.log("Connected correctly to server");
-    const db = client.db(dbName);
+    //console.log(res);
+    try {
+        await client.connect();
+        console.log("Connected correctly to server");
+        const db = client.db(dbName);
 
-    // Use the collection "people"
-    const col = db.collection("Users");
+        // Use the collection "people"
+        const col = db.collection("Users");
 
-    // Insert a single document, wait for promise so we can read it back
-    const p = await col.insertOne(jsonData);
+        // Insert a single document, wait for promise so we can read it back
+        const p = await col.insertOne(jsonData);
 
-  } catch (err) {
-    console.log(err.stack);
-  }
-
-  finally {
-    await client.close();
-  }
+    } catch (err) {
+        console.log(err.stack);
+    } finally {
+        await client.close();
+    }
 }

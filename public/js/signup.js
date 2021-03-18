@@ -10,8 +10,8 @@ const BADCOMBO_ERRORMESSAGE = "badCombo";
 function signup(password) {
     password = password.toString();
     var result = false;
-    console.log("passwordIsOK = " + passwordIsOK(password));
     if (passwordIsOK(password)) {
+        console.log("passwordIsOK = true (not breached and long enough)");
         result = true;
         //createUser();
     }
@@ -22,11 +22,11 @@ function signup(password) {
 //#region password checker
 // control validity of password
 function passwordIsOK(password) {
-    var result = false;
-    console.log("lengthIsOK = " + lengthIsOK(password));
+    var result = false;    
     if (lengthIsOK(password)) {
-        console.log("!psswdIsBreached = " + !psswdIsBreached(password));
-        if (!psswdIsBreached(password)) {
+        console.log("lengthIsOK = true (long enough)");
+        if (psswdIsBreached(password) == false) {
+            console.log("psswdIsBreached = false (password is not breached)");
             result = true;
         }
     }

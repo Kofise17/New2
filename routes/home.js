@@ -27,6 +27,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   /* ADD USER TO DB*/
   router.post('/signup', (req, res) => {
     if(signups.signup([req.body.password])){
+      console.log("signup = true (succeeded)");
       //console.log(req);
       var jsonData = {
         "name": [req.body.name].toString(),
@@ -41,6 +42,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
       res.redirect('/home/welcome');
     }
     else{
+      console.log("signup = false (something went wrong)");
       res.render('search_not_found.ejs', {})
     }
   })

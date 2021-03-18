@@ -10,10 +10,10 @@ const signups = require("../public/js/signup");
 var crypto = require('crypto')
 var shasum = crypto.createHash('sha1');
 
-MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
-  console.log(database);
-  dataB = database.db('SWS_DB')
+//MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
+  /* console.log(database);
   if (err) return console.log(err)
+  dataB = database.db('SWS_DB') */
 
   /* GET LOGINPAGE */
   router.get('/', (req, res) => {
@@ -52,7 +52,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   router.get('/welcome', (req, res) => {
     res.render('welcome.ejs', {})
   })
-})
+//})
 
 module.exports = router;
 

@@ -6,7 +6,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
-var homeRouter = require('./routes/home.js');
+var homeRouter = require('./routes/home');
 //#endregion
 
 //#region app config

@@ -9,34 +9,31 @@ var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 //#endregion
 
+//#region app config
 var app = express();
-
-// set port
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
-//#region server
-var server = http.createServer(app);
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-//#endregion
-
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
-app.set('view engine', 'ejs')
-
+app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
-
 app.use('/', indexRouter);
 app.use('/home', homeRouter);
+//#endregion
 
-app.listen(process.env.PORT || 3000);
+// set port
+
+
+
+//#region server
+/* var server = http.createServer(app);
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening); */
+//#endregion
 
 //#region errors
 // catch 404 and forward to error handler
@@ -110,4 +107,5 @@ function onListening() {
   return false;
 }
 
-module.exports = app;
+app.listen(process.env.PORT || 3000);
+/* module.exports = app; */

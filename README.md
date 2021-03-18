@@ -8,6 +8,7 @@ Simple login and sign up app created with Node.js, and MongoDB
 * [Sources](#sources)
 * [Issues](#issues)
 * [Developers](#developers)
+* [Progress](#progress)
 
 ## General info
 This project lets a user create a user which is safely stored in our private database at MongoDB.<br />
@@ -50,3 +51,14 @@ This project was developed by:<br />
 	* Email:
 * Wout Vinckevleugel
 	* Email: wout.vinckevleugel@student.ap.be
+
+## Progress
+- [x] Create Login 
+- [x] Create Signup page
+- [x] Create Welcome page
+- [x] Post new users to DB
+- [x] Show Welcome page after login/signup
+- [x] Hash passwords to go in DB
+- [ ] Show errors on page when password is too short
+- [ ] Show errors on page when password is breached
+- [ ] Show errors on page when password/username combo is wrong

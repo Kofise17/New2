@@ -1,4 +1,6 @@
 //#region var declaration
+var crypto = require('crypto')
+var shasum = crypto.createHash('sha1');
 const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 const BREACH_ERRORMESSAGE = "breach";
@@ -6,9 +8,9 @@ const BADCOMBO_ERRORMESSAGE = "badCombo";
 //#endregion
 //#region main button to trigger = "sign up"
 // onClick "register"
-function signup() {
+function signup(password) {
     var result = false;
-    if (passwordIsOK()) {
+    if (passwordIsOK(password)) {
         result = true;
         //createUser();
     }
@@ -18,35 +20,37 @@ function signup() {
 
 //#region password checker
 // control validity of password
-function passwordIsOK() {
+function passwordIsOK(password) {
     var result = false;
-    if (lengthIsOK()) {
-        if (!psswdIsBreached()) {
+    if (lengthIsOK(password)) {
+        //if (!psswdIsBreached(password)) {
             result = true;
-        }
+        //}
     }
     return result;
 }
 
 // control if password length is least 8
-function lengthIsOK() {
+function lengthIsOK(password) {
+    password = password.toString();
     var result = false;
-    changeClassLBad();
-    if (document.getElementById("password").value.length >= 8) {
-        changeClassLGood();
+    //changeClassLBad();
+    if (password.length >= 8) {
+        //changeClassLGood();
         result = true;
     }
     return result;
 }
 
 // control if password is breached
-function psswdIsBreached() {
+function psswdIsBreached(password) {
     var result = false;
-    var hash = SHA1(document.getElementById("password").value);
+    var hash = SHA1(password);
     var prefix = hash.substring(0, 5);
     var suffix = hash.substring(5, hash.length)
 
     axios.get(`${HIBP_API_URL}/${prefix}`).then(response => {
+        console.log(response);
         var responseOnePerLine = response.data.split("\n");
 
         for (var i = 0; i < responseOnePerLine.length; i++) {
@@ -55,7 +59,7 @@ function psswdIsBreached() {
 
             if (data[0].toLowerCase() == suffix) {
                 logError(BREACH_ERRORMESSAGE);
-                document.getElementById("psswdBreach").innerHTML = BREACHED_PASSWORD_TEXT;
+                //document.getElementById("psswdBreach").innerHTML = BREACHED_PASSWORD_TEXT;
                 return result = true;
             }
         }
@@ -98,7 +102,7 @@ function psswdIsBreached() {
     };
 
     function Utf8Encode(string) {
-        string = string.replace(/\r\n/g, '\n');
+        string = string.toString().replace(/\r\n/g, '\n');
         var utftext = '';
         for (var n = 0; n < string.length; n++) {
             var c = string.charCodeAt(n);
@@ -203,7 +207,7 @@ function psswdIsBreached() {
 //#endregion
 
 //#region class change colours
-function changeClassLGood() {
+/* function changeClassLGood() {
     document.getElementById("psswdLength").classList.remove("badPsswd");
     document.getElementById("psswdLength").classList.add("goodPsswd");
 }
@@ -211,45 +215,7 @@ function changeClassLGood() {
 function changeClassLBad() {
     document.getElementById("psswdLength").classList.remove("goodPsswd");
     document.getElementById("psswdLength").classList.add("badPsswd");
-}
-//#endregion
-
-//#region CreatingUser
-async function createUser() {
-    try{
-        await client.connect();
-        console.log("Connected correctly to server");
-        const db = client.db(dbName);
-
-        // Use the collection "Users"
-        const col = db.collection("Users");
-
-        var jsonData = {
-            "name": document.getElementById("name").value,
-            "firstName" : document.getElementById("firstname").value,
-            "adressLine" : document.getElementById("addressline").value,
-            "userName" : document.getElementById("username").value,
-            "email" : document.getElementById("email").value,
-            "password" : document.getElementById("password").value
-        };
-        console.log(jsonData);
-        // Insert a single document, wait for promise so we can read it back
-        const p = await col.insertOne(personDocument);
-
-        // Find one document
-        const myDoc = await col.findOne();
-
-        // Print to the console
-        console.log(myDoc);
-    }catch(err){
-        console.error(err.stack);
-    }
-
-    finally{
-        await client.close();
-    }
-
-}
+} */
 //#endregion
 
 //#region errors
@@ -267,5 +233,5 @@ function logError(error) {
 //#endregion
 
 //#region exports
-module.exports = {signup, lengthIsOK}
+module.exports = {signup, lengthIsOK, SHA1}
 //#endregion

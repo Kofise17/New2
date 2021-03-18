@@ -7,6 +7,8 @@ var db;
 var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
+var crypto = require('crypto')
+var shasum = crypto.createHash('sha1');
 
 MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
   db = database.db('SWS_DB')
@@ -24,19 +26,22 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
 
   /* ADD USER TO DB*/
   router.post('/signup', (req, res) => {
-    if(true){
+    if(signups.signup([req.body.password])){
       //console.log(req);
       var jsonData = {
-        "name": [req.body.name],
-        "firstname" : [req.body.firstname],
-        "adressline" : [req.body.adressline],
-        "username" : [req.body.username],
-        "email" : [req.body.email],
-        "password" : [req.body.password]
+        "name": [req.body.name].toString(),
+        "firstname" : [req.body.firstname].toString(),
+        "adressline" : [req.body.adressline].toString(),
+        "username" : [req.body.username].toString(),
+        "email" : [req.body.email].toString(),
+        "password" : signups.SHA1([req.body.password])
       };
       console.log(jsonData);
-      createUser(req).catch(console.dir);
+      createUser(jsonData).catch(console.dir);
       res.redirect('/home/welcome');
+    }
+    else{
+      res.render('search_not_found.ejs', {})
     }
   })
 
@@ -49,7 +54,7 @@ MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
 module.exports = router;
 
 
-async function createUser(req) {
+async function createUser(jsonData) {
   //console.log(res);
   try {
     await client.connect();

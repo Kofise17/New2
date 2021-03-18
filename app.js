@@ -1,4 +1,3 @@
-var app = express();
 //#region requires
 var createError = require('http-errors');
 var express = require('express');
@@ -9,7 +8,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 //#endregion
-
+var app = express();
 // set port
 console.log("made it to normalize");
 var port = normalizePort(process.env.PORT || '3000');

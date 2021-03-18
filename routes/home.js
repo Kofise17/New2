@@ -11,6 +11,7 @@ var crypto = require('crypto')
 var shasum = crypto.createHash('sha1');
 
 MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
+  console.log(database);
   dataB = database.db('SWS_DB')
   if (err) return console.log(err)
 

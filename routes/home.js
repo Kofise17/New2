@@ -3,12 +3,9 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient
 const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(connstring);
-var dataB;
 var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
-var crypto = require('crypto')
-var shasum = crypto.createHash('sha1');
 
 /* GET LOGINPAGE */
 router.get('/', (req, res) => {

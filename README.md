@@ -41,7 +41,7 @@ We couldn't use this one litterally because we had to write our own code. i did 
 Firstly we used plain html and js but quickly we noticed that connecting to a database (and many other things) are way easier using Node.js.
 That is why we switched to Node.js.
 ### Application platforms
-The original site with the plain html and js was running on [Netlify](https://www.netlify.com/), but we noticed that deploying a Node.js app to Netlify isn't the easiest to do. So we changed to Heroku, this went way smoother.
+The original site with the plain html and js was running on [Netlify](https://www.netlify.com/){:target="_blank"}, but we noticed that deploying a Node.js app to Netlify isn't the easiest to do. So we changed to Heroku, this went way smoother.
 ### Deployment
 We struggled a fair bit with the deployment of the Node.js app to Heroku, but in the end not a single article helped us. We looked through a lot of logs and eventually found a mistake (an unnecessary db connection made our site crash). It was easily solved by deleting the line.
 

@@ -47,6 +47,6 @@ We struggled a fair bit with the deployment of the Node.js app to Heroku, but in
 ## Developers
 This project was developed by:<br />
 * Huseini "Kofi" Seidu
-	* Email:
+	* Email: huseini.seidu@student.ap.be
 * Wout Vinckevleugel
 	* Email: wout.vinckevleugel@student.ap.be

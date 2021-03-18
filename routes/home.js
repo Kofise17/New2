@@ -10,49 +10,43 @@ const signups = require("../public/js/signup");
 var crypto = require('crypto')
 var shasum = crypto.createHash('sha1');
 
-//MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
-  /* console.log(database);
-  if (err) return console.log(err)
-  dataB = database.db('SWS_DB') */
+/* GET LOGINPAGE */
+router.get('/', (req, res) => {
+  res.render('login.ejs')
+})
 
-  /* GET LOGINPAGE */
-  router.get('/', (req, res) => {
-    res.render('login.ejs')
-  })
+/* SHOW SIGNUP PAGE */
+router.get('/signup', (req, res) =>{
+  res.render('signup.ejs', {})
+})
 
-  /* SHOW SIGNUP PAGE */
-  router.get('/signup', (req, res) =>{
-    res.render('signup.ejs', {})
-  })
+/* ADD USER TO DB*/
+router.post('/signup', (req, res) => {
+  if(signups.signup([req.body.password])){
+    console.log("signup = true (succeeded)");
+    //console.log(req);
+    var jsonData = {
+      "name": [req.body.name].toString(),
+      "firstname" : [req.body.firstname].toString(),
+      "adressline" : [req.body.adressline].toString(),
+      "username" : [req.body.username].toString(),
+      "email" : [req.body.email].toString(),
+      "password" : signups.SHA1([req.body.password])
+    };
+    //console.log(jsonData);
+    createUser(jsonData).catch(console.dir);
+    res.redirect('/home/welcome');
+  }
+  else{
+    console.log("signup = false (something went wrong)");
+    res.render('search_not_found.ejs', {})
+  }
+})
 
-  /* ADD USER TO DB*/
-  router.post('/signup', (req, res) => {
-    if(signups.signup([req.body.password])){
-      console.log("signup = true (succeeded)");
-      //console.log(req);
-      var jsonData = {
-        "name": [req.body.name].toString(),
-        "firstname" : [req.body.firstname].toString(),
-        "adressline" : [req.body.adressline].toString(),
-        "username" : [req.body.username].toString(),
-        "email" : [req.body.email].toString(),
-        "password" : signups.SHA1([req.body.password])
-      };
-      //console.log(jsonData);
-      createUser(jsonData).catch(console.dir);
-      res.redirect('/home/welcome');
-    }
-    else{
-      console.log("signup = false (something went wrong)");
-      res.render('search_not_found.ejs', {})
-    }
-  })
-
-  /* SHOW WELCOME PAGE */
-  router.get('/welcome', (req, res) => {
-    res.render('welcome.ejs', {})
-  })
-//})
+/* SHOW WELCOME PAGE */
+router.get('/welcome', (req, res) => {
+  res.render('welcome.ejs', {})
+})
 
 module.exports = router;
 

@@ -3,7 +3,7 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient
 const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/test?retryWrites=true&w=majority&useNewUrlParser=true&useUnifiedTopology=true";
 const client = new MongoClient(connstring);
-var db;
+var dataB;
 var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
@@ -11,7 +11,7 @@ var crypto = require('crypto')
 var shasum = crypto.createHash('sha1');
 
 MongoClient.connect(connstring, {useUnifiedTopology: true}, (err, database) => {
-  db = database.db('SWS_DB')
+  dataB = database.db('SWS_DB')
   if (err) return console.log(err)
 
   /* GET LOGINPAGE */

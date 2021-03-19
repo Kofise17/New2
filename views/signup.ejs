@@ -54,7 +54,7 @@
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                 <p id="psswdLength" class="badPsswd">Your password has to be at least 8 characters</p>
 
-                <% if(errorInfo !== null){ %>
+                <% if(locals.errorInfo){ %>
                 <p id="psswdBreach" class="badPsswd" value="<%=errorInfo%>"></p>
                 <% } %>
 

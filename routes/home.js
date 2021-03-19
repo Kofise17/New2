@@ -8,7 +8,7 @@ const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list 
 
 /* GET LOGINPAGE */
 router.get('/', (req, res) => {
-  res.render('login.ejs')
+    res.render('login.ejs')
 })
 
 /* SHOW SIGNUP PAGE */

@@ -37,7 +37,7 @@ router.post('/signup', (req, res) => {
   }
   else{
     console.log("signup = false (something went wrong)");
-    res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
+    res.render('signup.ejs', {'item': BREACHED_PASSWORD_TEXT});
   }
 })
 

@@ -1,3 +1,26 @@
+function login(username, dbUserName, password, dbPassword) {
+    checkUsername(username, dbUserName);
+    checkPassword(password, dbPassword);
+
+}
+
+function checkUsername(username, dbUserName) {
+    var result = false;
+    if (username == dbUserName) {
+        return true;
+    }
+    return result
+}
+
+function checkPassword(password, dbPassword) {
+    password = SHA1(password);
+    var result = false;
+    if (password == dbPassword) {
+        result = true;
+    }
+    return result;
+}
+
 function SHA1(msg) {
     function rotate_left(n, s) {
         var t4 = (n << s) | (n >>> (32 - s));

@@ -6,6 +6,7 @@ const client = new MongoClient(connstring);
 var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
+const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 
 /* GET LOGINPAGE */
 router.get('/', (req, res) => {
@@ -36,7 +37,7 @@ router.post('/signup', (req, res) => {
   }
   else{
     console.log("signup = false (something went wrong)");
-    res.render('search_not_found.ejs', {})
+    res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
   }
 })
 

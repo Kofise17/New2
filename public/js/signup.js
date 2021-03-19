@@ -1,7 +1,6 @@
 //#region var declaration
 const axios = require('axios');
 const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
-const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 const BREACH_ERRORMESSAGE = "breach";
 const BADCOMBO_ERRORMESSAGE = "badCombo";
 //#endregion

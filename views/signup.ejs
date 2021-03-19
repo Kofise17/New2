@@ -53,7 +53,7 @@
                 <label for="password" class="visually-hidden">Password</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                 <p id="psswdLength" class="badPsswd">Your password has to be at least 8 characters</p>
-                <% if(hasOwnProperty(errorInfo)){errorInfo = errorInfo}else{errorInfo = ''})%>
+                <% if(errorInfo !== null && errorInfo !== ''){errorInfo = errorInfo}else{errorInfo = ''})%>
                 <p id="psswdBreach" class="badPsswd" value="<%errorInfo%>"></p>
 
                 <button class="w-100 btn btn-lg btn-primary distance" type="submit">Sign up</button>

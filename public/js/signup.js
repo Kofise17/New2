@@ -24,7 +24,8 @@ function passwordIsOK(password) {
     var result = false;    
     if (lengthIsOK(password)) {
         console.log("lengthIsOK = true (long enough)");
-        if (psswdIsBreached(password) == false) {
+        console.log(psswdIsBreached(password));
+        if (psswdIsBreached(password) === false) {
             console.log("psswdIsBreached = false (password is not breached)");
             result = true;
         }
@@ -52,21 +53,19 @@ function psswdIsBreached(password) {
     var suffix = hash.substring(5, hash.length)
 
     axios.get(`${HIBP_API_URL}/${prefix}`).then(response => {
-        //console.log(response);
         var responseOnePerLine = response.data.split("\n");
 
         for (var i = 0; i < responseOnePerLine.length; i++) {
             var data = responseOnePerLine[i].split(":");
 
-
             if (data[0].toLowerCase() == suffix) {
-                logError(BREACH_ERRORMESSAGE);
+                console.log(BREACH_ERRORMESSAGE);
                 //document.getElementById("psswdBreach").innerHTML = BREACHED_PASSWORD_TEXT;
                 return result = true;
             }
-        }
-        return result;
+        }        
     }).catch(error => console.error('On get API Answer error', error));
+    return result;
 }
 
 /**
@@ -224,12 +223,12 @@ function changeClassLBad() {
 function logError(error) {
     switch (error) {
         case BREACH_ERRORMESSAGE:
-            console.error("Password has been breached");
+            console.log("Password has been breached");
             break;
         case BADCOMBO_ERRORMESSAGE:
-            console.error("Either the given password or username is incorrect");
+            console.log("Either the given password or username is incorrect");
         default:
-            console.error("There's something wrong, but I don't know what.");
+            console.log("There's something wrong, but I don't know what.");
     }
 }
 //#endregion

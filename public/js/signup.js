@@ -156,15 +156,17 @@ async function checkPsswdIsBreached(password) {
     var prefix = hash.substring(0, 5);
     var suffix = hash.substring(5, hash.length); 
 
-    const apiAnswer = axios.get(`${HIBP_API_URL}/${prefix}`)
+    // API call starts here
+    const apiAnswer = axios.get(`${HIBP_API_URL}/${prefix}`) // This Url gives a json response with 500 lines of hashed passwords
         .then(response => {
             var responseOnePerLine = response.data.split("\n");
 
+            // Run over those 500 lines
             for (var i = 0; i < responseOnePerLine.length; i++) {
                 var data = responseOnePerLine[i].split(":");
 
+                // if the suffix is found in tis list, it's been breached
                 if (data[0].toLowerCase() == suffix) {
-                    //console.error("!!!!!" + BREACH_ERRORMESSAGE + "!!!!!");
                     return result = true;
                 }
             }
@@ -174,7 +176,13 @@ async function checkPsswdIsBreached(password) {
         
     return apiAnswer;
 }
-// control if password length is least 8
+
+
+/**
+ * Control if password length is least 8
+ * @param {*} password the password that the user filled in
+ * @returns a boolean that says if the password is longer than 8 characters
+ */
 function lengthIsOK(password) {
     var result = false;
     //changeClassLBad();
@@ -185,25 +193,6 @@ function lengthIsOK(password) {
     }else{
         console.log("1.    lengthIsOK = false (too short)");
     }
-    return result;
-}
-
-// control validity of password
-function passwordIsOK(password) {
-    var result = false;
-    //var promise = await checkPsswdIsBreached(password);
-    var psswdIsBreached = checkPsswdIsBreached(password).then((response) => {})
-    .catch(error => console.error('On get API Answer'+ error, error));
-
-    if (lengthIsOK(password)) {
-        console.log("2.    lengthIsOK = true (long enough)");
-        //console.log(psswdIsBreached(password));
-        if (psswdIsBreached === false) {            
-            return result = true;
-        }
-    }
-    
-    console.log(result);
     return result;
 }
 //#endregion
@@ -220,33 +209,25 @@ function changeClassLBad() {
 } */
 //#endregion
 
-//#region errors
-function logError(error) {
-    switch (error) {
-        case BREACH_ERRORMESSAGE:
-            console.log("Password has been breached");
-            break;
-        case BADCOMBO_ERRORMESSAGE:
-            console.log("Either the given password or username is incorrect");
-        default:
-            console.log("There's something wrong, but I don't know what.");
-    }
-}
-//#endregion
-
 //#region main button to trigger = "sign up"
+/**
+ * This function calls the functions lengthIsOK() and checkPsswdIsBreached() to check if the password may be used
+ * @param {*} password the password that the user filled in
+ * @returns a boolean that says if both lengthIsOK and psswdIsBreached are okay
+ */
 // onClick "register"
 async function signup(password) {
     password = password.toString();
     var result = false; // set result on false, this is safer because if something goes wrong, the standard answer is false and the function won't succeed
     
+    // call checkPsswdIsBreached()
     var psswdIsBreached = await checkPsswdIsBreached(password)
         .then(response => {
             return response
         }).catch(error => console.error('On get API Answer'+ error, error));
 
-    if (lengthIsOK(password)) {
-        
+    // Call lengthIsOk()
+    if (lengthIsOK(password)) {        
         if (psswdIsBreached === false) {  
             console.log("2.    psswdIsBreached = false (password is not breached)");          
             result = true;

@@ -159,7 +159,7 @@ async function checkPsswdIsBreached(password) {
                 var data = responseOnePerLine[i].split(":");
 
                 if (data[0].toLowerCase() == suffix) {
-                    console.error("!!!!!" + BREACH_ERRORMESSAGE + "!!!!!");
+                    //console.error("!!!!!" + BREACH_ERRORMESSAGE + "!!!!!");
                     return result = true;
                 }
             }
@@ -174,8 +174,11 @@ function lengthIsOK(password) {
     var result = false;
     //changeClassLBad();
     if (password.length >= 8) {
+        console.log("1.    lengthIsOK = true (long enough)");
         //changeClassLGood();
         result = true;
+    }else{
+        console.log("1.    lengthIsOK = false (too short)");
     }
     return result;
 }
@@ -238,11 +241,12 @@ async function signup(password) {
         }).catch(error => console.error('On get API Answer'+ error, error));
 
     if (lengthIsOK(password)) {
-        console.log("1.    lengthIsOK = true (long enough)");
         
         if (psswdIsBreached === false) {  
             console.log("2.    psswdIsBreached = false (password is not breached)");          
             result = true;
+        }else{
+            console.log("!!!!! BREACH !!!!!"); 
         }
     }
     return result;

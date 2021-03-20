@@ -21,38 +21,6 @@ router.get('/signup', (req, res) =>{
 /* ADD USER TO DB*/
 router.post('/signup', (req, res) => {
   checkSignUpPlusCreateUser(req,res);
-  /* var isResolved;
-  var signupIsOk = async function() {
-    await signups.signup([req.body.password])
-    .then((response) => {})
-    .catch(error => console.error('On get API Answer'+ error, error));
-  }
-  console.log(signupIsOk.then(response => {
-    isResolved = response;
-  }));
-  
-  console.log("isResolved= " + isResolved);
-
-  //setTimeout(huppeldepup(req, res, signupIsOk),10000);
-  if(signupIsOk){
-    console.log("3.    signup = true (succeeded)");
-    //console.log(req);
-    var jsonData = {
-      "name": [req.body.name].toString(),
-      "firstname" : [req.body.firstname].toString(),
-      "adressline" : [req.body.adressline].toString(),
-      "username" : [req.body.username].toString(),
-      "email" : [req.body.email].toString(),
-      "password" : signups.SHA1([req.body.password])
-    };
-    //console.log(jsonData);
-    createUser(jsonData).catch(console.dir);
-    res.redirect('/home/welcome');
-  }
-  else{
-    console.log("signup = false (something went wrong)");
-    res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
-  } */
 })
 
 /* SHOW WELCOME PAGE */
@@ -104,7 +72,7 @@ async function checkSignUpPlusCreateUser(req, res){
       createUser(jsonData).catch(console.dir);
       res.redirect('/home/welcome');
     }else{
-      console.log("signup = false (something went wrong)");
+      console.log("3.    signup = false (something went wrong)");
       res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
     }
   return;

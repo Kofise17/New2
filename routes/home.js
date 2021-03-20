@@ -60,9 +60,11 @@ async function checkSignUpPlusCreateUser(req, res){
   var signupIsOk = await signups.signup([req.body.password]).then((response) => {return response;})
   .catch(error => console.error('On get API Answer'+ error, error));
 
+  // If the password is alright go further
   if(signupIsOk){
     console.log("3.    signup = true (succeeded)");
-    //console.log(req);
+
+    // Set up the jsonData to send to createuser
     var jsonData = {
       "name": [req.body.name].toString(),
       "firstname" : [req.body.firstname].toString(),
@@ -71,12 +73,12 @@ async function checkSignUpPlusCreateUser(req, res){
       "email" : [req.body.email].toString(),
       "password" : signups.SHA1([req.body.password])
     };
-    //console.log(jsonData);
-    createUser(jsonData).catch(console.dir);
-    res.redirect('/home/welcome');
+
+    createUser(jsonData).catch(console.dir); // CreateUser
+    res.redirect('/home/welcome'); // Redirect to welcome page
   }else{
     console.log("3.    signup = false (something went wrong)");
-    res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
+    res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT}); // Redirect to signup page on error
   }
   return;
 }

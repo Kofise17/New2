@@ -1,12 +1,15 @@
+//#region Variables and Constants
 var express = require('express');
 var router = express.Router();
+var dbName = "SWS_DB";
+
 const MongoClient = require('mongodb').MongoClient
 const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&useUnifiedTopology=true";
 const client = new MongoClient(connstring);
-var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
+//#endregion
 
 /* SHOW LOGIN PAGE */
 router.get('/', (req, res) => {

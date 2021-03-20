@@ -1,5 +1,6 @@
 # Task Software security
-Simple login and sign up app created with Node.js, and MongoDB
+Simple login and sign up app created with Node.js, and MongoDB<br />
+All the files should have been commented thoroughly to make everything understandable.
 
 ## Table of contents
 * [General info](#general-info)

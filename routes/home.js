@@ -33,6 +33,7 @@ module.exports = router;
 
 async function createUser(jsonData) {
   try {
+    console.log("start connecting");
     await client.connect();
     console.log("Connected correctly to server");
     const db = client.db(dbName);

@@ -8,7 +8,7 @@ const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 
-/* GET LOGINPAGE */
+/* SHOW LOGIN PAGE */
 router.get('/', (req, res) => {
     res.render('login.ejs')
 })
@@ -18,38 +18,36 @@ router.get('/signup', (req, res) => {
     res.render('signup.ejs', {})
 })
 
-/* ADD USER TO DB*/
-router.post('/signup', (req, res) => {
-  checkSignUpPlusCreateUser(req,res);
-})
-
 /* SHOW WELCOME PAGE */
 router.get('/welcome', (req, res) => {
   res.render('welcome.ejs', {});
 })
 
-module.exports = router;
+/* AFTER SIGNUP BUTTON PUSH */
+router.post('/signup', (req, res) => {
+  checkSignUpPlusCreateUser(req,res);
+})
 
 
+/* ADD USER TO DB */
 async function createUser(jsonData) {
   try {
-    console.log("start connecting");
-    await client.connect();
+    await client.connect(); // Connect to the Mongoclient
     console.log("Connected correctly to server");
     const db = client.db(dbName);
 
-        // Use the collection "people"
+        // Use the collection "Users"
         const col = db.collection("Users");
 
-        // Insert a single document, wait for promise so we can read it back
+        // Insert a single document, wait for promise so we can read it back if desired
         const p = await col.insertOne(jsonData);
 
   } catch (err) {
-    console.log(err.stack);
+    console.log(err.stack); // Logging error if something were to go wrong
   }
 
   finally {
-    await client.close();
+    await client.close(); // Close the client
   }
 }
 
@@ -78,3 +76,5 @@ async function checkSignUpPlusCreateUser(req, res){
     }
   return;
 }
+
+module.exports = router;

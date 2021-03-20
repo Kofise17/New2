@@ -146,7 +146,7 @@ const BADCOMBO_ERRORMESSAGE = "badCombo";
 
 /**
  * The password the the user gave on the signup page will be checked for breaches in the HIBP Database
- * @param {*} password the password that the user filled in
+ * @param {String} password the password that the user filled in
  * @returns a boolean that says if it has been breached
  */
 // Check if password is breached
@@ -177,10 +177,9 @@ async function checkPsswdIsBreached(password) {
     return apiAnswer;
 }
 
-
 /**
  * Control if password length is least 8
- * @param {*} password the password that the user filled in
+ * @param {String} password the password that the user filled in
  * @returns a boolean that says if the password is longer than 8 characters
  */
 function lengthIsOK(password) {
@@ -212,7 +211,7 @@ function changeClassLBad() {
 //#region main button to trigger = "sign up"
 /**
  * This function calls the functions lengthIsOK() and checkPsswdIsBreached() to check if the password may be used
- * @param {*} password the password that the user filled in
+ * @param {String} password the password that the user filled in
  * @returns a boolean that says if both lengthIsOK and psswdIsBreached are okay
  */
 // onClick "register"

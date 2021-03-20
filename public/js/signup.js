@@ -144,7 +144,12 @@ const BADCOMBO_ERRORMESSAGE = "badCombo";
     return temp.toLowerCase();
 }
 
-// control if password is breached
+/**
+ * The password the the user gave on the signup page will be checked for breaches in the HIBP Database
+ * @param {*} password the password that the user filled in
+ * @returns a boolean that says if it has been breached
+ */
+// Check if password is breached
 async function checkPsswdIsBreached(password) {
     var result = false;
     var hash = SHA1(password);

@@ -44,6 +44,10 @@ That is why we switched to Node.js.
 The original site with the plain html and js was running on [Netlify](https://www.netlify.com/), but we noticed that deploying a Node.js app to Netlify isn't the easiest to do. So we changed to Heroku, this went way smoother.
 ### Deployment
 We struggled a fair bit with the deployment of the Node.js app to Heroku, but in the end not a single article helped us. We looked through a lot of logs and eventually found a mistake (an unnecessary db connection made our site crash). It was easily solved by deleting the line.
+### Asynchronous functions
+Something that caused a serious headache was the fact that using axios to do the API request, makes your code asynchronous.<br />
+What does that matter you might ask: well because of that the app said "okay this password is perfectly fine" and then a second or two later the api answer came through and the app realises "ohno it isn't perfectly fine at all" but by then it is already too late and you are on the welcome page. <br />
+Now how did we solve this? By putting the keyword "async" infront of the function and putting "await" infront of the api call it actually makes your program wait for an answer. This does make the site slower, but a lot safer.
 
 ## Developers
 This project was developed by:<br />

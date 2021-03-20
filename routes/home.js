@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&useUnifiedTopology=true";
 const client = new MongoClient(connstring);
 var dbName = "SWS_DB";
 const functions = require("../public/js/functional1");
@@ -18,40 +18,22 @@ router.get('/signup', (req, res) => {
 
 /* ADD USER TO DB*/
 router.post('/signup', (req, res) => {
-    if (signups.signup([req.body.password])) {
-        console.log("signup = true (succeeded)");
-        //console.log(req);
-        var jsonData = {
-            "name": [req.body.name].toString(),
-            "firstname": [req.body.firstname].toString(),
-            "adressline": [req.body.adressline].toString(),
-            "username": [req.body.username].toString(),
-            "email": [req.body.email].toString(),
-            "password": signups.SHA1([req.body.password])
-        };
-        //console.log(jsonData);
-        createUser(jsonData).catch(console.dir);
-        res.redirect('/home/welcome');
-    } else {
-        console.log("signup = false (something went wrong)");
-        res.render('signup.ejs', { 'errorInfo': BREACHED_PASSWORD_TEXT });
-    }
+  checkSignUpPlusCreateUser(req,res);
 })
 
 /* SHOW WELCOME PAGE */
 router.get('/welcome', (req, res) => {
-    res.render('welcome.ejs', {})
+  res.render('welcome.ejs', {});
 })
 
 module.exports = router;
 
 
 async function createUser(jsonData) {
-    //console.log(res);
-    try {
-        await client.connect();
-        console.log("Connected correctly to server");
-        const db = client.db(dbName);
+  try {
+    await client.connect();
+    console.log("Connected correctly to server");
+    const db = client.db(dbName);
 
         // Use the collection "people"
         const col = db.collection("Users");
@@ -59,9 +41,37 @@ async function createUser(jsonData) {
         // Insert a single document, wait for promise so we can read it back
         const p = await col.insertOne(jsonData);
 
-    } catch (err) {
-        console.log(err.stack);
-    } finally {
-        await client.close();
+  } catch (err) {
+    console.log(err.stack);
+  }
+
+  finally {
+    await client.close();
+  }
+}
+
+
+async function checkSignUpPlusCreateUser(req, res){
+  var signupIsOk = await signups.signup([req.body.password]).then((response) => {return response;})
+  .catch(error => console.error('On get API Answer'+ error, error));
+
+    if(signupIsOk){
+      console.log("3.    signup = true (succeeded)");
+      //console.log(req);
+      var jsonData = {
+        "name": [req.body.name].toString(),
+        "firstname" : [req.body.firstname].toString(),
+        "adressline" : [req.body.adressline].toString(),
+        "username" : [req.body.username].toString(),
+        "email" : [req.body.email].toString(),
+        "password" : signups.SHA1([req.body.password])
+      };
+      //console.log(jsonData);
+      createUser(jsonData).catch(console.dir);
+      res.redirect('/home/welcome');
+    }else{
+      console.log("3.    signup = false (something went wrong)");
+      res.render('signup.ejs', {'errorInfo': BREACHED_PASSWORD_TEXT});
     }
+  return;
 }

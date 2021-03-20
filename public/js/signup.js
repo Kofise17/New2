@@ -4,70 +4,8 @@ const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
 const BREACH_ERRORMESSAGE = "breach";
 const BADCOMBO_ERRORMESSAGE = "badCombo";
 //#endregion
-//#region main button to trigger = "sign up"
-// onClick "register"
-function signup(password) {
-    password = password.toString();
-    var result = false;
-    if (passwordIsOK(password)) {
-        console.log("passwordIsOK = true (not breached and long enough)");
-        result = true;
-        //createUser();
-    }
-    return result;
-}
-//#endregion
 
 //#region password checker
-// control validity of password
-function passwordIsOK(password) {
-    var result = false;    
-    if (lengthIsOK(password)) {
-        console.log("lengthIsOK = true (long enough)");
-        console.log(psswdIsBreached(password));
-        if (psswdIsBreached(password) === false) {
-            console.log("psswdIsBreached = false (password is not breached)");
-            result = true;
-        }
-    }
-    //console.log(result);
-    return result;
-}
-
-// control if password length is least 8
-function lengthIsOK(password) {
-    var result = false;
-    //changeClassLBad();
-    if (password.length >= 8) {
-        //changeClassLGood();
-        result = true;
-    }
-    return result;
-}
-
-// control if password is breached
-function psswdIsBreached(password) {
-    var result = false;
-    var hash = SHA1(password);
-    var prefix = hash.substring(0, 5);
-    var suffix = hash.substring(5, hash.length)
-
-    axios.get(`${HIBP_API_URL}/${prefix}`).then(response => {
-        var responseOnePerLine = response.data.split("\n");
-
-        for (var i = 0; i < responseOnePerLine.length; i++) {
-            var data = responseOnePerLine[i].split(":");
-
-            if (data[0].toLowerCase() == suffix) {
-                console.log(BREACH_ERRORMESSAGE);
-                //document.getElementById("psswdBreach").innerHTML = BREACHED_PASSWORD_TEXT;
-                return result = true;
-            }
-        }        
-    }).catch(error => console.error('On get API Answer error', error));
-    return result;
-}
-
 /**
  * Secure Hash Algorithm (SHA1)
  * http://www.webtoolkit.info/
@@ -205,6 +143,64 @@ function psswdIsBreached(password) {
 
     return temp.toLowerCase();
 }
+
+// control if password is breached
+async function checkPsswdIsBreached(password) {
+    var result = false;
+    var hash = SHA1(password);
+    var prefix = hash.substring(0, 5);
+    var suffix = hash.substring(5, hash.length); 
+
+    const apiAnswer = axios.get(`${HIBP_API_URL}/${prefix}`)
+        .then(response => {
+            var responseOnePerLine = response.data.split("\n");
+
+            for (var i = 0; i < responseOnePerLine.length; i++) {
+                var data = responseOnePerLine[i].split(":");
+
+                if (data[0].toLowerCase() == suffix) {
+                    //console.error("!!!!!" + BREACH_ERRORMESSAGE + "!!!!!");
+                    return result = true;
+                }
+            }
+            return result;
+        })
+        .catch(error => console.error('On get API Answer error', error));
+        
+    return apiAnswer;
+}
+// control if password length is least 8
+function lengthIsOK(password) {
+    var result = false;
+    //changeClassLBad();
+    if (password.length >= 8) {
+        console.log("1.    lengthIsOK = true (long enough)");
+        //changeClassLGood();
+        result = true;
+    }else{
+        console.log("1.    lengthIsOK = false (too short)");
+    }
+    return result;
+}
+
+// control validity of password
+function passwordIsOK(password) {
+    var result = false;
+    //var promise = await checkPsswdIsBreached(password);
+    var psswdIsBreached = checkPsswdIsBreached(password).then((response) => {})
+    .catch(error => console.error('On get API Answer'+ error, error));
+
+    if (lengthIsOK(password)) {
+        console.log("2.    lengthIsOK = true (long enough)");
+        //console.log(psswdIsBreached(password));
+        if (psswdIsBreached === false) {            
+            return result = true;
+        }
+    }
+    
+    console.log(result);
+    return result;
+}
 //#endregion
 
 //#region class change colours
@@ -230,6 +226,30 @@ function logError(error) {
         default:
             console.log("There's something wrong, but I don't know what.");
     }
+}
+//#endregion
+
+//#region main button to trigger = "sign up"
+// onClick "register"
+async function signup(password) {
+    password = password.toString();
+    var result = false; // set result on false, this is safer because if something goes wrong, the standard answer is false and the function won't succeed
+    
+    var psswdIsBreached = await checkPsswdIsBreached(password)
+        .then(response => {
+            return response
+        }).catch(error => console.error('On get API Answer'+ error, error));
+
+    if (lengthIsOK(password)) {
+        
+        if (psswdIsBreached === false) {  
+            console.log("2.    psswdIsBreached = false (password is not breached)");          
+            result = true;
+        }else{
+            console.log("!!!!! BREACH !!!!!"); 
+        }
+    }
+    return result;
 }
 //#endregion
 

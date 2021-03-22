@@ -1,7 +1,6 @@
 function login(username, dbUserName, password, dbPassword) {
     checkUsername(username, dbUserName);
     checkPassword(password, dbPassword);
-
 }
 
 function checkUsername(username, dbUserName) {

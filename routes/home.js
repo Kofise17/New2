@@ -35,36 +35,55 @@ router.post('/signup', (req, res) => {
 router.post('/welcome', (req, res) => {
     console.log([req.body.username].toString())
     console.log(signups.SHA1([req.body.password]))
-    findUser(req, res);
-    res.render('welcome.ejs', {})
+    login(req, res);
+
 })
 
+/* login */
+async function login(req, res) {
+    username = [req.body.username].toString();
+    password = signups.SHA1([req.body.password]);
+    var loginIsOK = await findUser(username, password).then((response) => { return response; })
+        .catch(error => console.error('On get API Answer' + error, error));
+
+    console.log(loginIsOK);
+    if (loginIsOK !== null) {
+        console.log("Log in succeeded");
+        res.redirect('/home/welcome');
+    } else {
+        console.log("3.    login = false (something went wrong)");
+        res.render('login.ejs', {}); // Redirect to signup page on error
+    }
+    return;
+}
+
 /*FIND USER IN DB*/
-async function findUser(req, res) {
+async function findUser(username, password) {
+    var found = null;
     try {
 
         await client.connect();
         console.log("Connected correctly to server");
         const db = client.db(dbName);
-        console.log("username value: " + [req.body.username].toString())
-        console.log("Password value: " + signups.SHA1([req.body.password]))
-            // Use the collection "Users"
+        // Use the collection "Users"
         const col = db.collection("Users");
-        await col.findOne({
+        found = await col.findOne({
             $and: [{
-                "username": [req.body.username].toString()
+                "username": username
             }, {
-                "password": signups.SHA1([req.body.password])
+                "password": password
             }]
         })
+        console.log(found);
     } catch (error) {
-        console.log("Wrong");
-        console.log(error)
-        done();
+        console.log("login failed");
+        await client.close();
+        //console.log(error.stack);
     } finally {
         await client.close();
-        console.log("Client has closed")
+        console.log("Client has closed");
     }
+    return found;
 }
 /* ADD USER TO DB */
 async function createUser(jsonData) {

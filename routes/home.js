@@ -32,6 +32,11 @@ router.post('/signup', (req, res) => {
     checkSignUpPlusCreateUser(req, res);
 })
 
+/* AFTER LOGIN BUTTON PUSH */
+router.post('/login', (req, res) => {
+    finduser(req, res);
+})
+
 /*FIND USER IN DB*/
 async function findUser() {
     try {

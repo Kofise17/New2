@@ -88,7 +88,7 @@ async function findUser(username, password) {
         console.log("login failed");
         //console.log(error.stack);
     } finally {
-        await client.close();
+        //await client.close();
         console.log("Client has closed");
     }
 }
@@ -113,7 +113,7 @@ async function createUser(jsonData) {
     } catch (err) {
         console.log(err.stack); // Logging error if something were to go wrong
     } finally {
-        await client.close(); // Close the client
+        //await client.close(); // Close the client
     }
 }
 

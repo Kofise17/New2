@@ -8,7 +8,7 @@ const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirst
 const client = new MongoClient(connstring);
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
-const login = require("../public/js.login");
+const login = require("../public/js/login");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 //#endregion
 

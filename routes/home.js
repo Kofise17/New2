@@ -44,7 +44,7 @@ async function findUser() {
         const col = db.collection("Users");
         col.findOne({
             $and: [
-                { username: [req.body.username] },
+                { username: [req.body.username].toString() },
                 { password: login.SHA1([req.boy.password]) }
             ]
         })
@@ -106,5 +106,4 @@ async function checkSignUpPlusCreateUser(req, res) {
     return;
 }
 
-module.exports = router;
 module.exports = router;

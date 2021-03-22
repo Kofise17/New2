@@ -11,6 +11,7 @@ const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 //#endregion
 
+//#region get and post routers
 /* SHOW LOGIN PAGE */
 router.get('/', (req, res) => {
     res.render('login.ejs')
@@ -33,31 +34,40 @@ router.post('/signup', (req, res) => {
 
 /* AFTER LOGIN BUTTON PUSH */
 router.post('/welcome', (req, res) => {
-    console.log([req.body.username].toString())
-    console.log(signups.SHA1([req.body.password]))
     login(req, res);
-
 })
+//#endregion
 
-/* login */
+//#region Extra functions
+/**
+ * Calling the login function to see if the combo exists
+ * @param {*} req required that has all data from previous page (used for getting name and body)
+ * @param {*} res result that can and will be used to go to the new page
+ * @returns a promise so we wait for the "then" to complete and give the boolean back
+ */
 async function login(req, res) {
     username = [req.body.username].toString();
     password = signups.SHA1([req.body.password]);
     var loginIsOK = await findUser(username, password).then((response) => { return response; })
         .catch(error => console.error('On get API Answer' + error, error));
 
-    console.log(loginIsOK);
+    //console.log(loginIsOK);
     if (loginIsOK !== null) {
         console.log("Log in succeeded");
         res.redirect('/home/welcome');
     } else {
         console.log("3.    login = false (something went wrong)");
-        res.render('login.ejs', {}); // Redirect to signup page on error
+        res.render('login.ejs', {}); // Redirect to login page on error
     }
     return;
 }
 
-/*FIND USER IN DB*/
+/**
+ * Finding a user in the mongo DB to check if it exists
+ * @param {String} username the username given by the user
+ * @param {String} password the password given by the user
+ * @returns a promise so we wait for the "then" to complete and give the boolean back
+ */
 async function findUser(username, password) {
     var found = null;
     try {
@@ -74,18 +84,20 @@ async function findUser(username, password) {
                 "password": password
             }]
         })
-        console.log(found);
+        //console.log(found);
     } catch (error) {
         console.log("login failed");
-        await client.close();
         //console.log(error.stack);
     } finally {
         await client.close();
         console.log("Client has closed");
     }
-    return found;
 }
-/* ADD USER TO DB */
+
+/**
+ * Creating a user in the mongo database
+ * @param {JSON} jsonData 
+ */
 async function createUser(jsonData) {
     try {
 
@@ -106,12 +118,13 @@ async function createUser(jsonData) {
     }
 }
 
-/* CHECK IF THE SIGNUP INFO IS POSSIBLE */
+/**
+ * Calling the signup function to see if password is alright
+ * @param {*} req required that has all data from previous page (used for getting name and body)
+ * @param {*} res result that can and will be used to go to the new page
+ * @returns a promise so we wait for the "then" to complete and give the boolean back
+ */
 async function checkSignUpPlusCreateUser(req, res) {
-    /**
-     * Calling the signup function to see if password is alright
-     * @returns a promise so we wait for the "then" to complete and give the boolean back
-     */
     var signupIsOk = await signups.signup([req.body.password]).then((response) => { return response; })
         .catch(error => console.error('On get API Answer' + error, error));
 
@@ -137,5 +150,6 @@ async function checkSignUpPlusCreateUser(req, res) {
     }
     return;
 }
+//#endregion
 
 module.exports = router;

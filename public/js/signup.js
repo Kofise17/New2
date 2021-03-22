@@ -238,6 +238,4 @@ async function signup(password) {
 }
 //#endregion
 
-//#region exports
 module.exports = {signup, lengthIsOK, SHA1}
-//#endregion

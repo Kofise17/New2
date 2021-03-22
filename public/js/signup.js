@@ -1,8 +1,6 @@
 //#region var declaration
 const axios = require('axios');
 const HIBP_API_URL = 'https://api.pwnedpasswords.com/range/';
-const BREACH_ERRORMESSAGE = "breach";
-const BADCOMBO_ERRORMESSAGE = "badCombo";
 //#endregion
 
 //#region password checker
@@ -194,18 +192,6 @@ function lengthIsOK(password) {
     }
     return result;
 }
-//#endregion
-
-//#region class change colours
-/* function changeClassLGood() {
-    document.getElementById("psswdLength").classList.remove("badPsswd");
-    document.getElementById("psswdLength").classList.add("goodPsswd");
-}
-
-function changeClassLBad() {
-    document.getElementById("psswdLength").classList.remove("goodPsswd");
-    document.getElementById("psswdLength").classList.add("badPsswd");
-} */
 //#endregion
 
 //#region main button to trigger = "sign up"

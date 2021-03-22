@@ -8,7 +8,6 @@ const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirst
 const client = new MongoClient(connstring);
 const functions = require("../public/js/functional1");
 const signups = require("../public/js/signup");
-const login = require("../public/js/login");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
 //#endregion
 
@@ -33,35 +32,43 @@ router.post('/signup', (req, res) => {
 })
 
 /* AFTER LOGIN BUTTON PUSH */
-router.post('/login', (req, res) => {
-    finduser(req, res);
+router.post('/welcome', (req, res) => {
+    console.log([req.body.username].toString())
+    console.log(signups.SHA1([req.body.password]))
+    findUser(req, res);
 })
 
 /*FIND USER IN DB*/
-async function findUser() {
+async function findUser(req, res) {
     try {
 
         await client.connect();
         console.log("Connected correctly to server");
         const db = client.db(dbName);
-
-        // Use the collection "USers"
+        console.log("username value: " + [req.body.username].toString())
+        console.log("Password value: " + signups.SHA1([req.body.password]))
+            // Use the collection "Users"
         const col = db.collection("Users");
-        col.findOne({
-            $and: [
-                { username: [req.body.username].toString() },
-                { password: login.SHA1([req.boy.password]) }
-            ]
+        await col.findOne({
+            $and: [{
+                "username": [req.body.username].toString()
+            }, {
+                "password": signups.SHA1([req.body.password])
+            }]
         })
     } catch (error) {
-        console.log(error.stack)
+        console.log("Wrong");
+        console.log(error)
+        done();
     } finally {
         await client.close();
+        console.log("Client has closed")
     }
 }
 /* ADD USER TO DB */
 async function createUser(jsonData) {
     try {
+
         await client.connect(); // Connect to the Mongoclient
         console.log("Connected correctly to server");
         const db = client.db(dbName);

@@ -36,6 +36,7 @@ router.post('/welcome', (req, res) => {
     console.log([req.body.username].toString())
     console.log(signups.SHA1([req.body.password]))
     findUser(req, res);
+    res.render('welcome.ejs', {})
 })
 
 /*FIND USER IN DB*/

@@ -59,14 +59,10 @@ This project was developed by:<br />
 
 ## Progress
 - [x] Create Login 
-- [ ] Make Login page functional
+- [x] Make Login page functional
 - [x] Create Signup page
 - [x] Make Signup functional
 - [x] Create Welcome page
 - [x] Post new users to DB
 - [x] Show Welcome page after login/signup
 - [x] Hash passwords to go in DB
-- [ ] Show errors on page when password is too short
-- [ ] Show errors on page when password is breached
-- [ ] Show errors on page when password/username combo is wrong
-- [ ] Make Erase button work

@@ -10,6 +10,7 @@ All the files should have been commented thoroughly to make everything understan
 * [Issues](#issues)
 * [Developers](#developers)
 * [Progress](#progress)
+* [A few functions](#a-few-functions)
 
 ## General info
 This project lets a user create a user which is safely stored in our private database at MongoDB.<br />
@@ -38,6 +39,7 @@ We couldn't use this one litterally because we had to write our own code. i did 
 4. [Heroku](https://devcenter.heroku.com/categories/nodejs-support) for help with setting up our site.
 
 ## Issues
+Of course we had a lot of issues while building this (it's a learning experience after all), so here are the biggest ones we've encountered.
 ### Programming languages
 Firstly we used plain html and js but quickly we noticed that connecting to a database (and many other things) are way easier using Node.js.
 That is why we switched to Node.js.
@@ -49,6 +51,31 @@ We struggled a fair bit with the deployment of the Node.js app to Heroku, but in
 Something that caused a serious headache was the fact that using axios to do the API request, makes your code asynchronous.<br />
 What does that matter you might ask: well because of that the app said "okay this password is perfectly fine" and then a second or two later the api answer came through and the app realises "ohno it isn't perfectly fine at all" but by then it is already too late and you are on the welcome page. <br />
 Now how did we solve this? By putting the keyword "async" infront of the function and putting "await" infront of the api call it actually makes your program wait for an answer. This does make the site slower, but a lot safer.
+
+## A few functions
+Regarding the stress on security this assignment here follow a few of the most important functions we wrote:
+### CheckPsswdIsbreached()
+As the name suggest (as should be with function names) this function will chek if the password entered by the user comes up in the "Have I Been Pwned"(HIBP) database.
+````
+// the URL below gives a json response with 500 lines of hashed passwords (hashed in SHA1)
+const apiAnswer = axios.get(`${HIBP_API_URL}/${prefix}`)
+        .then(response => {
+            var responseOnePerLine = response.data.split("\n");
+
+            // Run over those 500 lines
+            for (var i = 0; i < responseOnePerLine.length; i++) {
+                var data = responseOnePerLine[i].split(":");
+
+                // if the suffix is found in tis list, it's been breached
+                if (data[0].toLowerCase() == suffix) {
+                    return result = true;
+                }
+            }
+            return result;
+        })
+        .catch(error => console.error('On get API Answer error', error));
+````
+Above code will do an API-call to the "HIBP" database. We will iterate over the response and if we find a match with your password, it has been breached and thus may not be used.
 
 ## Developers
 This project was developed by:<br />

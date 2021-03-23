@@ -76,7 +76,34 @@ const apiAnswer = axios.get(`${HIBP_API_URL}/${prefix}`)
         .catch(error => console.error('On get API Answer error', error));
 ````
 Above code will do an API-call to the "HIBP" database. We will iterate over the response and if we find a match with your password, it has been breached and thus may not be used.
+### findUser()
+This function is used on the login page of our application. When the user clicks on the login button, the program will try to find a user with given username and password combo in the database. If it doesn't find a match, it doesn't exist and you'll have to try again.
+````
+try {
 
+        await client.connect();
+        console.log("Connected correctly to server");
+        const db = client.db(dbName);
+        // Use the collection "Users"
+        const col = db.collection("Users");
+        found = await col.findOne({
+            $and: [{
+                "username": username
+            }, {
+                "password": password
+            }]
+        })
+        //console.log(found);
+    } catch (error) {
+        console.log("login failed");
+        //console.log(error.stack);
+    } finally {
+        //await client.close();
+        console.log("Client has closed");
+    }
+ ````
+### Other functions
+We won't be showing every single function we used in this document, if you would like to know more about a function we did our best to put enough clear comments in the code itself. We encourage you to search them and in case of questions [ask us](#developers)!
 ## Developers
 This project was developed by:<br />
 * Huseini "Kofi" Seidu

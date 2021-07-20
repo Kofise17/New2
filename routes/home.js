@@ -8,6 +8,8 @@ const connstring = "mongodb+srv://Admin:nktnsXEWabP5M4y@cluster0.8cpdn.mongodb.n
 const client = new MongoClient(connstring);
 const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
+// get crypto module
+const crypto = require("crypto");
 //#endregion
 
 //#region get and post routers
@@ -46,19 +48,22 @@ router.post('/welcome', (req, res) => {
  */
 async function login(req, res) {
     username = [req.body.username].toString();
-    password = signups.SHA1([req.body.password]);
-    var loginIsOK = await findUser(username, password).then((response) => {
-		//console.log(loginIsOK);
-		if (loginIsOK !== null) {
-			console.log("Log in succeeded");
-			res.redirect('/home/welcome');
-		} else {
-			console.log("3.    login = false (something went wrong)");
-			res.render('login.ejs', {}); // Redirect to login page on error
-		}
-		return response; 
-	})
-        .catch(error => console.error('On get API Answer' + error, error));
+    password = crypto.createHash([req.body.password].toString());
+    var loginIsOK = await findUser(username, password).then(
+		(response) => 
+		{
+			//console.log(loginIsOK);
+			if (loginIsOK !== null) {
+				console.log("Log in succeeded");
+				res.redirect('/home/welcome');
+			} else {
+				console.log("3.    login = false (something went wrong)");
+				res.render('login.ejs', {}); // Redirect to login page on error
+			}
+			return response; 
+		}).catch(
+			error => console.error('On get API Answer' + error, error)
+		);
 }
 
 /**
@@ -135,7 +140,7 @@ async function checkSignUpPlusCreateUser(req, res) {
 					"adressline": [req.body.adressline].toString(),
 					"username": [req.body.username].toString(),
 					"email": [req.body.email].toString(),
-					"password": signups.SHA1([req.body.password])
+					"password": crypto.createHash([req.body.password].toString())
 				};
 		
 				createUser(jsonData).catch(console.dir); // CreateUser

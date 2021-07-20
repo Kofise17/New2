@@ -4,7 +4,7 @@ var router = express.Router();
 var dbName = "SWS_DB";
 
 const MongoClient = require('mongodb').MongoClient
-const connstring = "mongodb+srv://Admin:Admin@cluster0.8cpdn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&useUnifiedTopology=true";
+const connstring = "mongodb+srv://Admin:nktnsXEWabP5M4y@cluster0.8cpdn.mongodb.net/Cluster0?retryWrites=true&w=majority&useUnifiedTopology=true";
 const client = new MongoClient(connstring);
 const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
@@ -47,18 +47,18 @@ router.post('/welcome', (req, res) => {
 async function login(req, res) {
     username = [req.body.username].toString();
     password = signups.SHA1([req.body.password]);
-    var loginIsOK = await findUser(username, password).then((response) => { return response; })
+    var loginIsOK = await findUser(username, password).then((response) => {
+		//console.log(loginIsOK);
+		if (loginIsOK !== null) {
+			console.log("Log in succeeded");
+			res.redirect('/home/welcome');
+		} else {
+			console.log("3.    login = false (something went wrong)");
+			res.render('login.ejs', {}); // Redirect to login page on error
+		}
+		return response; 
+	})
         .catch(error => console.error('On get API Answer' + error, error));
-
-    //console.log(loginIsOK);
-    if (loginIsOK !== null) {
-        console.log("Log in succeeded");
-        res.redirect('/home/welcome');
-    } else {
-        console.log("3.    login = false (something went wrong)");
-        res.render('login.ejs', {}); // Redirect to login page on error
-    }
-    return;
 }
 
 /**
@@ -99,7 +99,6 @@ async function findUser(username, password) {
  */
 async function createUser(jsonData) {
     try {
-
         await client.connect(); // Connect to the Mongoclient
         console.log("Connected correctly to server");
         const db = client.db(dbName);
@@ -113,7 +112,7 @@ async function createUser(jsonData) {
     } catch (err) {
         console.log(err.stack); // Logging error if something were to go wrong
     } finally {
-        //await client.close(); // Close the client
+        await client.close(); // Close the client
     }
 }
 
@@ -124,30 +123,31 @@ async function createUser(jsonData) {
  * @returns a promise so we wait for the "then" to complete and give the boolean back
  */
 async function checkSignUpPlusCreateUser(req, res) {
-    var signupIsOk = await signups.signup([req.body.password]).then((response) => { return response; })
+    var signupIsOk = await signups.signup([req.body.password]).then(
+		(response) => { 
+			if (response) {
+				console.log("3.    signup = true (succeeded)");
+		
+				// Set up the jsonData to send to createuser
+				var jsonData = {
+					"name": [req.body.name].toString(),
+					"firstname": [req.body.firstname].toString(),
+					"adressline": [req.body.adressline].toString(),
+					"username": [req.body.username].toString(),
+					"email": [req.body.email].toString(),
+					"password": signups.SHA1([req.body.password])
+				};
+		
+				createUser(jsonData).catch(console.dir); // CreateUser
+				res.redirect('/home/welcome'); // Redirect to welcome page
+			} else {
+				console.log("3.    signup = false (something went wrong)");
+				res.render('signup.ejs', { 'errorInfo': BREACHED_PASSWORD_TEXT }); // Redirect to signup page on error
+			}
+			return response; 
+		}
+	)
         .catch(error => console.error('On get API Answer' + error, error));
-
-    // If the password is alright go further
-    if (signupIsOk) {
-        console.log("3.    signup = true (succeeded)");
-
-        // Set up the jsonData to send to createuser
-        var jsonData = {
-            "name": [req.body.name].toString(),
-            "firstname": [req.body.firstname].toString(),
-            "adressline": [req.body.adressline].toString(),
-            "username": [req.body.username].toString(),
-            "email": [req.body.email].toString(),
-            "password": signups.SHA1([req.body.password])
-        };
-
-        createUser(jsonData).catch(console.dir); // CreateUser
-        res.redirect('/home/welcome'); // Redirect to welcome page
-    } else {
-        console.log("3.    signup = false (something went wrong)");
-        res.render('signup.ejs', { 'errorInfo': BREACHED_PASSWORD_TEXT }); // Redirect to signup page on error
-    }
-    return;
 }
 //#endregion
 

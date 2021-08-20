@@ -17,6 +17,7 @@ const crypto = require("crypto");
 /* SHOW LOGIN PAGE */
 router.get('/', (req, res) => {
     res.render('login.ejs')
+    console.log(signups.sha256("Hello"))
 })
 
 /* SHOW SIGNUP PAGE */
@@ -49,7 +50,7 @@ router.post('/welcome', (req, res) => {
  */
 async function login(req, res) {
     username = [req.body.username].toString();
-    password = signups.SHA1([req.body.password].toString());
+    password = signups.sha256([req.body.password].toString());
     var loginIsOK = await findUser(username, password).then(
         (response) => {
             if (loginIsOK !== null) {
@@ -139,7 +140,7 @@ async function checkSignUpPlusCreateUser(req, res) {
                         "adressline": [req.body.adressline].toString(),
                         "username": [req.body.username].toString(),
                         "email": [req.body.email].toString(),
-                        "password": signups.SHA1([req.body.password].toString())
+                        "password": signups.sha256([req.body.password].toString())
                     };
 
                     createUser(jsonData).catch(console.dir); // CreateUser

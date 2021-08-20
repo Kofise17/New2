@@ -17,7 +17,6 @@ const crypto = require("crypto");
 /* SHOW LOGIN PAGE */
 router.get('/', (req, res) => {
     res.render('login.ejs')
-    console.log(signups.sha256("Hello"))
 })
 
 /* SHOW SIGNUP PAGE */
@@ -75,7 +74,6 @@ async function login(req, res) {
 async function findUser(username, password) {
     var found = null;
     try {
-
         await client.connect();
         console.log("Connected correctly to server");
         const db = client.db(dbName);

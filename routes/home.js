@@ -2,10 +2,11 @@
 var express = require('express');
 var router = express.Router();
 var dbName = "securitySite";
+var dbUserPass = "HtvT6h1782xGEhzw"
 
 
 const MongoClient = require('mongodb').MongoClient
-const connstring = "mongodb+srv://securitySiteAdmin:HtvT6h1782xGEhzw@cluster0.qrmeb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&useUnifiedTopology=true";
+const connstring = `mongodb+srv://securitySiteAdmin:${dbUserPass}@cluster0.qrmeb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&useUnifiedTopology=true`;
 const client = new MongoClient(connstring);
 const signups = require("../public/js/signup");
 const BREACHED_PASSWORD_TEXT = "Your password must not be contained in the list of breached passwords";
